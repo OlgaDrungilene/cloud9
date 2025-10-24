@@ -1,7 +1,5 @@
-import React from 'react';
-
-import './index.css';
-import App from './App';
+import "./index.css";
+import App from "./App";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
@@ -13,4 +11,3 @@ root.render(
     <App />
   </StrictMode>
 );
-
