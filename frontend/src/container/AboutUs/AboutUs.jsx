@@ -1,10 +1,11 @@
 import React from "react";
-
 import { images } from "../../constants";
+import  { scrollToTop, scrollTo } from '../../utils/scroll';
 import "./AboutUs.css";
 
+
 const AboutUs = () => (
-  <div className="app__aboutus app__bg flex__center section__padding" id="about">
+  <section className="app__aboutus app__bg flex__center section__padding section-full" id="about">
     <div className="app__aboutus-overlay flex__center ">
       <img src={images.c_9} alt="c letter" />
     </div>
@@ -53,7 +54,12 @@ const AboutUs = () => (
         </button>
       </div>
     </div>
-  </div>
+
+    <div className="section-nav">
+      <span onClick={() => scrollToTop()}>↑ Top</span>
+      <span onClick={() => scrollTo("#menu")}>Next →</span>
+    </div>
+  </section>
 );
 
 export default AboutUs;

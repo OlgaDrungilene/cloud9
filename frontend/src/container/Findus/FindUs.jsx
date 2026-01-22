@@ -1,9 +1,10 @@
 import React from "react";
 import { SubHeading } from "../../components";
+import { scrollToTop, scrollTo } from "../../utils/scroll";
 import { images } from "../../constants";
 
 const FindUs = () => (
-  <div className="app__bg app__wrapper section__padding" id="contact">
+  <section className="app__bg app__wrapper section__padding " id="contact">
     <div className="app__wrapper_info">
       <SubHeading title="Contact" />
       <h1 className="headtext__cormorant" style={{ marginBottom: "3rem" }}>
@@ -21,7 +22,10 @@ const FindUs = () => (
     <div className="app__wrapper_img">
       <img src={images.findus} alt="findus" />
     </div>
-  </div>
+    <div className="section-nav">
+      <span onClick={() => scrollToTop()}>↑ Top</span>
+    </div>
+  </section>
 );
 
 export default FindUs;

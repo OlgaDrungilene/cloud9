@@ -1,3 +1,7 @@
+#home {
+  scroll-margin-top: 80px; /* ändra 80px till navbar-höjd */
+}
+
 .app__navbar {
     width: 100%;
     display: flex;

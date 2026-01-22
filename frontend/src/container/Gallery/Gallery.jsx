@@ -7,6 +7,7 @@ import {
 
 import { SubHeading } from "../../components";
 import { images } from "../../constants";
+import { scrollToTop, scrollTo } from "../../utils/scroll";
 import "./Gallery.css";
 
 const Gallery = () => {
@@ -23,7 +24,7 @@ const Gallery = () => {
   };
 
   return (
-    <div className="app__gallery flex__center">
+    <section className="app__gallery flex__center section-full" id="gallery">
       <div className="app__gallery-content">
         <SubHeading title="Instagram" />
         <h1 className="headtext__cormorant">Photo Gallery</h1>
@@ -69,7 +70,11 @@ const Gallery = () => {
           />
         </div>
       </div>
-    </div>
+      <div className="section-nav">
+        <span onClick={() => scrollToTop()}>↑ Top</span>
+        <span onClick={() => scrollTo("#contact")}>Next →</span>
+      </div>
+    </section>
   );
 };
 

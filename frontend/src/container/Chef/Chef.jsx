@@ -2,10 +2,11 @@ import React from "react";
 
 import { SubHeading } from "../../components";
 import { images } from "../../constants";
+import { scrollToTop, scrollTo } from "../../utils/scroll";
 import "./Chef.css";
 
 const Chef = () => (
-  <div className="app__bg app__wrapper section__padding">
+  <section className="app__bg app__wrapper section__padding " id="chef" >
     <div className="app__wrapper_img app__wrapper_img-reverse">
       <img src={images.chef} alt="chef" />
     </div>
@@ -37,7 +38,11 @@ const Chef = () => (
       </div>
 
     </div>
-  </div>
+    <div className="section-nav">
+      <span onClick={() => scrollToTop()}>↑ Top</span>
+      <span onClick={() => scrollTo("#awards")}>Next →</span>
+    </div>
+  </section>
 );
 
 export default Chef;

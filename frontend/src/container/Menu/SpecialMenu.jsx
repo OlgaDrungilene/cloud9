@@ -1,11 +1,17 @@
 import React from 'react';
 
 import {SubHeading, MenuItem } from '../../components';
-import {images, data} from'../../constants';
+import { images } from '../../constants';
+import * as data from'../../constants';
+import { scrollToTop, scrollTo } from '../../utils/scroll';
+import { useNavigate } from 'react-router-dom';
 import './SpecialMenu.css';
 
-const SpecialMenu = () => (
-  <div className='app__specialMenu flex__center section__padding' id='menu'>
+const SpecialMenu = () => {
+  const navigate = useNavigate();
+
+return(
+  <section className='app__specialMenu flex__center section__padding section-full' id='menu'>
     <div className='app__specialMenu-title'>
       <SubHeading title='Menu that suits your palate' />
       <h1 className='headtext__cormorant'>Today's Special</h1>
@@ -17,6 +23,9 @@ const SpecialMenu = () => (
         <div className='app__specialMenu_menu_items'>
           {data.wines.map((wine, index) =>(
             <MenuItem key={wine.title + index} title={wine.title} price={wine.price} tags={wine.tags} />
+          ))}
+          {data.beers.map((beer, index) =>(
+            <MenuItem key={beer.title + index} title={beer.title} price={beer.price} tags={beer.tags} />
           ))}
         </div>
       </div>
@@ -37,9 +46,14 @@ const SpecialMenu = () => (
     </div>
 
     <div style={{marginTop: '15px'}}>
-        <button type='button' className='custom__button'>View More</button>
+        <button type='button' className='custom__button' onClick={()=> navigate("/menu#drinks")}>View More</button>
     </div>
-  </div>
+    <div className="section-nav">
+      <span onClick={() => scrollToTop()}>↑ Top</span>
+      <span onClick={() => scrollTo("#awards")}>Next →</span>
+    </div>
+  </section>
 );
+};
 
 export default SpecialMenu;

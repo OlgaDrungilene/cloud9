@@ -1,5 +1,8 @@
+html {
+  scroll-behavior: smooth;
+}
 .section__padding {
-  padding: 4rem 6rem;
+  padding: 4rem 3rem;
 }
 
 .flex__center {
@@ -100,6 +103,7 @@
 .spoon__img {
   width: 45px;
 }
+
 
 @media screen and (min-width: 2000px) {
   .custom__button,

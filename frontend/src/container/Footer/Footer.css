@@ -12,6 +12,15 @@
     padding-top: 0;
 }
 
+.app__footer-img {
+  transition: filter 0.3s ease;
+}
+
+.app__footer-img:hover {
+   filter: brightness(0.5);
+}
+
+
 .app__footer-links {
     width: 100%;
     display: flex;
