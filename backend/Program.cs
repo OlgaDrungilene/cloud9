@@ -22,7 +22,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseStaticFiles();
+
 app.UseCors("ReactPolicy");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -47,6 +51,15 @@ app.MapGet("/menu/{id}", async (Cloud9Context db, int id) =>
         .FirstOrDefaultAsync(m => m.Id == id);
 
     return item is null ? Results.NotFound() : Results.Ok(item);
+});
+
+app.MapGet("/menu/specials", async (Cloud9Context db) =>
+{
+    var specials = await db.MenuItems
+        .Where(m => m.IsSpecial)
+        .ToListAsync();
+
+    return Results.Ok(specials);
 });
 
 app.MapGet("/tables", async (Cloud9Context db) =>
