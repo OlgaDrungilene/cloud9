@@ -36,3 +36,9 @@ Thumbs.db
 
 # Logs
 *.log
+# Remove legacy frontend in root
+public/
+src/
+package.json
+package-lock.json
+README.md

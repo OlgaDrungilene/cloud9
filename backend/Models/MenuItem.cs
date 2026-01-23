@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 namespace backend.Models;
 
 public class MenuItem
@@ -9,6 +10,8 @@ public class MenuItem
     public string? Tags {get; set; }
 
     public int CategoryId { get; set; }
+
+    [JsonIgnore]
     public Category Category { get; set; } = default!;
 
     public bool IsSpecial { get; set; } = false;
