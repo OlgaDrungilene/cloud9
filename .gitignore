@@ -1,0 +1,23 @@
+# FRONTEND
+frontend/node_modules/
+frontend/build/
+
+# BACKEND
+backend/bin/
+backend/obj/
+backend/appsettings*.json
+
+# Logs
+*.log
+
+# Env
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
