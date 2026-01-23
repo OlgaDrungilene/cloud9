@@ -1,0 +1,124 @@
+.app__aboutus {
+    position: relative;
+}
+
+.app__aboutus-overlay {
+    position: absolute;
+    top: 0 !important;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.app__aboutus-overlay img {
+    margin-top: 7rem;
+    margin-left: -6rem;
+    width: 700px;
+    height: 415px;
+    z-index: 0;
+}
+
+.app__aboutus-content {
+    width: 100%;
+    z-index: 2;
+}
+
+.app__aboutus-content_about {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-direction: column;
+
+    text-align: right;
+}
+
+.app__aboutus-content_knife {
+    margin: 2rem 4rem;
+}
+
+.app__aboutus-content_knife img {
+    height: 910px;
+}
+
+.app__aboutus-content_history {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+
+    text-align: left;
+}
+
+.app__aboutus-content_history p,
+.app__aboutus-content_about p {
+    margin: 2rem 0;
+    color: var(--color-grey);
+    text-align: justify;
+
+}
+/* .section-nav {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 10;
+  
+}
+
+.section-nav span {
+  padding: 0.5rem 1rem;
+  background: var(--color-golden);
+  color: var(--color-black);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--font-base);
+  user-select: none;
+  transition: background 0.3s ease;
+  padding: 10px;
+}
+
+.section-nav span:hover {
+  background: var(--color-white);
+} */
+
+
+
+@media screen and (min-width: 2000px) {
+    .app__aboutus-content_knife img {
+        height: 1110px;
+    }
+
+    .app__aboutus-content_history p,
+    .app__aboutus-content_about p{
+        margin: 4rem 0;
+    }
+
+}
+
+@media screen and (max-width: 900px) {
+    .app__aboutus-content {
+        flex-direction: column;
+    } 
+
+    .app__aboutus-content_knife {
+        margin: 4rem 0;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .app__aboutus-overlay img {
+        margin-left: -1rem;
+        margin-bottom: -30rem;
+        width: 85%;
+        height: 320px;
+    }
+    
+}
+
+
+

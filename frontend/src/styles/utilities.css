@@ -1,0 +1,26 @@
+.section-nav {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  gap: 15px;
+  color: var(--color-golden);
+  font-family: var(--font-base);
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.section-nav span:hover {
+  color: var(--color-white);
+}
+
+.section-full {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+
