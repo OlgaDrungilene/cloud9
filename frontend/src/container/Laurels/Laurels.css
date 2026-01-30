@@ -1,7 +1,7 @@
 .app__laurels_awards {
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
     position: relative;
     
@@ -22,9 +22,9 @@
     text-align: justify;
 }
 
-@media screen and (min-width: 1900px) {
+@media screen and (min-width: 1700px) {
     .app__laurels_awards-card {
-        min-width: 390px;
+        min-width: 350px;
     }
 }
 
@@ -39,6 +39,11 @@
     margin-left: 1rem;
 }
 
+/* @media screen and (min-width: 1700px) {
+    .app__laurels_awards-card {
+        min-width: 350px;
+    }
+} */
 @media screen and (max-width: 450px) {
     .app__laurels_awards-card {
         min-width: 100%;

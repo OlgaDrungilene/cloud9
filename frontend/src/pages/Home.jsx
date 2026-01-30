@@ -53,7 +53,7 @@ return(
     <div id="awards"><Laurels /></div>
     <Gallery />
     <div id="contact"><FindUs /></div>
-    <Footer />
+    <div id="subscribe"><Footer /></div>
   </div>
 );
 };

@@ -5,8 +5,6 @@ import gallery02 from '../assets/gallery02.jpg';
 import gallery03 from '../assets/gallery03.jpg';
 import gallery04 from '../assets/gallery04.jpg';
 import knife from '../assets/knife.png';
-import logo from '../assets/logo.png';
-import menu from '../assets/menu.png';
 import overlaybg from '../assets/overlaybg.png';
 import spoon from '../assets/spoon.svg';
 import welcome from '../assets/welcome.png';
@@ -33,9 +31,7 @@ const exportedObject = {
   gallery03,
   gallery04,
   knife,
-  logo,
   margarita,
-  menu,
   overlaybg,
   spoon,
   welcome,

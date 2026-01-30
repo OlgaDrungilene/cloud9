@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Data;
@@ -11,9 +12,11 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(Cloud9Context))]
-    partial class Cloud9ContextModelSnapshot : ModelSnapshot
+    [Migration("20260127101620_UpdateBookingModel")]
+    partial class UpdateBookingModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,9 +57,14 @@ namespace backend.Migrations
                     b.Property<int?>("TableId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("TableId1")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TableId");
+
+                    b.HasIndex("TableId1");
 
                     b.ToTable("Bookings");
                 });
@@ -364,106 +372,94 @@ namespace backend.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("isActive")
-                        .HasColumnType("boolean");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Tables", (string)null);
+                    b.ToTable("Tables");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             Capacity = 2,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = false
                         },
                         new
                         {
                             Id = 2,
                             Capacity = 2,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 3,
                             Capacity = 4,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = false
                         },
                         new
                         {
                             Id = 4,
                             Capacity = 4,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 5,
                             Capacity = 4,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = false
                         },
                         new
                         {
                             Id = 6,
                             Capacity = 4,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 7,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = false
                         },
                         new
                         {
                             Id = 8,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 9,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = false
                         },
                         new
                         {
                             Id = 10,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 11,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = false
                         },
                         new
                         {
                             Id = 12,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         });
                 });
 
             modelBuilder.Entity("backend.Models.Booking", b =>
                 {
                     b.HasOne("backend.Models.Table", "Table")
+                        .WithMany()
+                        .HasForeignKey("TableId");
+
+                    b.HasOne("backend.Models.Table", null)
                         .WithMany("Bookings")
-                        .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("TableId1");
 
                     b.Navigation("Table");
                 });

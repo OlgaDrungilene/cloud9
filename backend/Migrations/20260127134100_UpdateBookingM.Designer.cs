@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Data;
@@ -11,9 +12,11 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(Cloud9Context))]
-    partial class Cloud9ContextModelSnapshot : ModelSnapshot
+    [Migration("20260127134100_UpdateBookingM")]
+    partial class UpdateBookingM
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,11 +57,29 @@ namespace backend.Migrations
                     b.Property<int?>("TableId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("TableId1")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TableId");
 
+                    b.HasIndex("TableId1");
+
                     b.ToTable("Bookings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BookingTime = new DateTime(2026, 1, 27, 16, 41, 0, 428, DateTimeKind.Utc).AddTicks(4897),
+                            Email = "john@example.com",
+                            FullName = "John Doe",
+                            Notes = "Window seat",
+                            Persons = 2,
+                            Phone = "0700000000",
+                            TableId = 2
+                        });
                 });
 
             modelBuilder.Entity("backend.Models.Category", b =>
@@ -364,9 +385,6 @@ namespace backend.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("isActive")
-                        .HasColumnType("boolean");
-
                     b.HasKey("Id");
 
                     b.ToTable("Tables", (string)null);
@@ -376,94 +394,86 @@ namespace backend.Migrations
                         {
                             Id = 1,
                             Capacity = 2,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 2,
                             Capacity = 2,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 3,
                             Capacity = 4,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 4,
                             Capacity = 4,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 5,
                             Capacity = 4,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 6,
                             Capacity = 4,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 7,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 8,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 9,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 10,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 11,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         },
                         new
                         {
                             Id = 12,
                             Capacity = 6,
-                            IsAvailable = true,
-                            isActive = true
+                            IsAvailable = true
                         });
                 });
 
             modelBuilder.Entity("backend.Models.Booking", b =>
                 {
                     b.HasOne("backend.Models.Table", "Table")
-                        .WithMany("Bookings")
+                        .WithMany()
                         .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("backend.Models.Table", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("TableId1");
 
                     b.Navigation("Table");
                 });

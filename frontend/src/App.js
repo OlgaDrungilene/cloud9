@@ -5,6 +5,7 @@ import Menu from "./pages/Menu";
 import Booking from "./pages/Booking";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import Admin from "./pages/Admin";
 
 import "./App.css";
 
@@ -17,6 +18,7 @@ const App = () => (
       <Route path="/menu" element={<Menu />} />
       <Route path="/booking" element={<Booking />} />
       <Route path="*" element={<NotFound />} />
+      <Route path="/admin" element={<Admin />} />
     </Routes>
   </>
 );

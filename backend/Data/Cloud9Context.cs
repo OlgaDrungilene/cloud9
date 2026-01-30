@@ -1,6 +1,7 @@
-namespace backend.Data;
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
+
+namespace backend.Data;
 
 public class Cloud9Context : DbContext
 {
@@ -13,28 +14,32 @@ public class Cloud9Context : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Table>().ToTable("Tables");
+
         // Seed fixed tables
         modelBuilder.Entity<Table>().HasData(
-            new Table { Id = 1, Capacity = 2, IsAvailable = (1 % 2 == 0) },
-            new Table { Id = 2, Capacity = 2, IsAvailable = (2 % 2 == 0) },
-            new Table { Id = 3, Capacity = 4, IsAvailable = (3 % 2 == 0) },
-            new Table { Id = 4, Capacity = 4 , IsAvailable = (4 % 2 == 0) },
-            new Table { Id = 5, Capacity = 4, IsAvailable = (5 % 2 == 0) },
-            new Table { Id = 6, Capacity = 4, IsAvailable = (6 % 2 == 0) },
-            new Table { Id = 7, Capacity = 6, IsAvailable = (7 % 2 == 0) },
-            new Table { Id = 8, Capacity = 6, IsAvailable = (8 % 2 == 0) },
-            new Table { Id = 9, Capacity = 6, IsAvailable = (9 % 2 == 0) },
-            new Table { Id = 10, Capacity = 6, IsAvailable = (10 % 2 == 0) },
-            new Table { Id = 11, Capacity = 6, IsAvailable = (11 % 2 == 0) },
-            new Table { Id = 12, Capacity = 6, IsAvailable = (12 % 2 == 0) }
+            new Table { Id = 1, Capacity = 2, IsAvailable = true },
+            new Table { Id = 2, Capacity = 2, IsAvailable = true },
+            new Table { Id = 3, Capacity = 4, IsAvailable = true },
+            new Table { Id = 4, Capacity = 4, IsAvailable = true },
+            new Table { Id = 5, Capacity = 4, IsAvailable = true },
+            new Table { Id = 6, Capacity = 4, IsAvailable = true },
+            new Table { Id = 7, Capacity = 6, IsAvailable = true },
+            new Table { Id = 8, Capacity = 6, IsAvailable = true },
+            new Table { Id = 9, Capacity = 6, IsAvailable = true },
+            new Table { Id = 10, Capacity = 6, IsAvailable = true },
+            new Table { Id = 11, Capacity = 6, IsAvailable = true },
+            new Table { Id = 12, Capacity = 6, IsAvailable = true }
 
         );
 
         modelBuilder.Entity<Booking>()
             .HasOne(b => b.Table)
-            .WithMany()
-            .HasForeignKey(b => b.TableId);
-
+            .WithMany(t => t.Bookings)
+            .HasForeignKey(b => b.TableId)
+            .OnDelete(DeleteBehavior.Restrict);
+            
+       
         modelBuilder.Entity<MenuItem>()
             .HasOne(m => m.Category)
             .WithMany(c => c.MenuItems)

@@ -24,6 +24,7 @@ const FindUs = () => (
     </div>
     <div className="section-nav">
       <span onClick={() => scrollToTop()}>↑ Top</span>
+      <span onClick={() => scrollTo("#subscribe")}>Next →</span>
     </div>
   </section>
 );
