@@ -88,6 +88,7 @@ No booking exists within booking time window
 ## 🛠 Installation
 
 ### 1️⃣ Clone repo
+
 ```bash
 git clone https://github.com/yourusername/cloud9.git
 cd cloud9
