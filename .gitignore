@@ -7,6 +7,8 @@ frontend/coverage/
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
+!frontend/public/_redirects
+
 
 # BACKEND (.NET)
 backend/bin/
