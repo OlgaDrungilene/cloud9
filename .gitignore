@@ -1,4 +1,4 @@
-# FRONTEND
+# ================= FRONTEND =================
 frontend/node_modules/
 frontend/build/
 frontend/.pnp
@@ -9,38 +9,32 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 !frontend/public/_redirects
 
-
-# BACKEND (.NET)
+# ================= BACKEND (.NET) =================
 backend/bin/
 backend/obj/
 backend/appsettings.Development.json
 backend/appsettings.Production.json
-backend/appsettings.json
+# OBS: behåll appsettings.json om du vill deploya
+# backend/appsettings.json
 
-# Rider / VSCode / VS / IDE
+# ================= IDE =================
 .vscode/
 .idea/
 *.user
 *.suo
 
-# Docker
+# ================= Docker =================
 volumes/
 docker-data/
 
-# System / OS
+# ================= System =================
 .DS_Store
 Thumbs.db
 
-# Env / Secrets
+# ================= Env =================
 .env
 *.env
 .env.local
 
-# Logs
+# ================= Logs =================
 *.log
-# Remove legacy frontend in root
-public/
-src/
-package.json
-package-lock.json
-README.md
