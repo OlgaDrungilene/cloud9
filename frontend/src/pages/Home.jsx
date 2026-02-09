@@ -16,7 +16,6 @@ const Home = () => {
   const location = useLocation();
 
     useEffect(() => {
-        const hash = window.location.hash;
         if (location.hash) {
           const element = document.querySelector(location.hash);
           if (element) {
