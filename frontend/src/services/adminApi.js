@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5077";
+const BASE_URL = "https://cloud9-3.onrender.com";
 
 export async function getBookings() {
   const res = await fetch(`${BASE_URL}/bookings`);
