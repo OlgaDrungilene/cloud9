@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:3000",
-            "https://cloud9-restaurant.netlify.app/"
+            "https://cloud9-restaurant.netlify.app"
         )
               .AllowAnyHeader()
               .AllowAnyMethod();
