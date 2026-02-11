@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./BookingForm.css";
 
+const BASE_URL = "https://cloud9-3.onrender.com";
+
 const BookingForm = () => {
   const [form, setForm] = useState({
     fullName: "",
@@ -22,7 +24,7 @@ const BookingForm = () => {
     setStatus("loading");
 
     try {
-      const res = await fetch("http://localhost:5077/bookings", {
+      const res = await fetch(`${BASE_URL}/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

@@ -2,15 +2,17 @@ import React from "react";
 
 import "./MenuItem.css";
 
+const BASE_URL = "https://cloud9-3.onrender.com";
+
 const MenuItem = ({ item }) => {
   if (!item) return null;
-  const baseUrl = "https://cloud9-3.onrender.com";
+  
 
   return (
     <div className="app__menuitem">
       {item.imageUrl && (
         <img
-          src={`${baseUrl}${item.imageUrl}`}
+          src={`${BASE_URL}${item.imageUrl}`}
           alt={item.name}
           className="menu-item-image"
         />
