@@ -1,4 +1,4 @@
-# ☁️ Cloud9 Restaurant Booking System
+# ☁️ Cloud9 Restaurant
 
 Fullstack restaurant booking and menu system built with **React + .NET + PostgreSQL**.
 
@@ -14,7 +14,38 @@ And allows admins to:
 - Automatically clean old bookings
 
 ---
+## 🌍 Live Demo
 
+**Frontend (Netlify)**  
+https://cloud9-restaurant.netlify.app/
+
+**Backend API (Render)**  
+https://cloud9-3.onrender.com/menu-items
+
+---
+
+## 🏗 Architecture
+
+Client–server architecture:
+
+- **Frontend:** React SPA deployed on Netlify  
+- **Backend:** .NET Minimal API deployed on Render  
+- **Database:** PostgreSQL hosted on Render  
+- **Communication:** REST API over HTTPS  
+- **CORS configured** for secure cross-origin requests
+
+---
+
+## 🚀 Production Deployment
+
+- Automatic builds via **GitHub → Netlify / Render**
+- Environment variables for:
+  - Database connection
+  - API base URL
+- Database migrations executed on startup
+- HTTPS enabled in production
+
+---
 ## 🚀 Tech Stack
 
 ### Frontend
