@@ -9,6 +9,10 @@ const Menu = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+const BASE_URL =
+  import.meta.env.VITE_API_URL || "https://cloud9-3.onrender.com";
+
+
   useEffect(() => {
     if (!loading && hash) {
       const el = document.querySelector(hash);
@@ -23,7 +27,7 @@ const Menu = () => {
   }, [hash, loading]);
 
   useEffect(() => {
-    fetch("http://localhost:5077/menu-items")
+    fetch(`${BASE_URL}/menu-items`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch menu items");
         return res.json();

@@ -4,7 +4,7 @@ import "./MenuItem.css";
 
 const MenuItem = ({ item }) => {
   if (!item) return null;
-  const baseUrl = "http://localhost:5077";
+  const baseUrl = "https://cloud9-3.onrender.com";
 
   return (
     <div className="app__menuitem">

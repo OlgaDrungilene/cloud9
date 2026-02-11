@@ -13,11 +13,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactPolicy", policy =>
     {
-        // policy.WithOrigins(
-        //     "http://localhost:3000",
-        //     "https://cloud9-restaurant.netlify.app"
-        // )
-        policy.AllowAnyOrigin()
+        policy.WithOrigins(
+            "http://localhost:3000",
+            "https://cloud9-restaurant.netlify.app"
+        )
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
