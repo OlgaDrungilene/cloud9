@@ -6,9 +6,8 @@ import { scrollToTop, scrollTo } from "../../utils/scroll";
 import { useNavigate } from "react-router-dom";
 import "./SpecialMenu.css";
 
- const BASE_URL =
-  import.meta.env.VITE_API_URL || "https://cloud9-3.onrender.com";
-  
+ const BASE_URL ="https://cloud9-3.onrender.com";
+
 const SpecialMenu = () => {
   const navigate = useNavigate();
 

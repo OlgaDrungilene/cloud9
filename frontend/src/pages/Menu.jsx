@@ -3,8 +3,7 @@ import { useLocation } from "react-router-dom";
 import MenuItem from "../components/Menuitem/MenuItem";
 import "./Menu.css";
 
-const BASE_URL =
-  import.meta.env.VITE_API_URL || "https://cloud9-3.onrender.com";
+const BASE_URL ="https://cloud9-3.onrender.com";
 
 const Menu = () => {
   const { hash } = useLocation();
