@@ -3,6 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using backend.Data;
 using backend.Models;
 
+Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "1");
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 //DbContext
