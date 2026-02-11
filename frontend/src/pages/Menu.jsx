@@ -3,15 +3,14 @@ import { useLocation } from "react-router-dom";
 import MenuItem from "../components/Menuitem/MenuItem";
 import "./Menu.css";
 
+const BASE_URL =
+  import.meta.env.VITE_API_URL || "https://cloud9-3.onrender.com";
+
 const Menu = () => {
   const { hash } = useLocation();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-const BASE_URL =
-  import.meta.env.VITE_API_URL || "https://cloud9-3.onrender.com";
-
 
   useEffect(() => {
     if (!loading && hash) {
