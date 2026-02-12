@@ -198,6 +198,7 @@ async (Cloud9Context db, int id, int tableId) =>
         return Results.BadRequest("Table already booked in this time window.");
 
     booking.TableId = tableId;
+    table.IsAvailable = false;
 
     await db.SaveChangesAsync();
 
