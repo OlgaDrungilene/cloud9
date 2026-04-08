@@ -34,7 +34,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<Cloud9Context>();
 
-    db.Database.Migrate();
+    //db.Database.Migrate();
 
     await AutoCleanupBookings(db);
 }
