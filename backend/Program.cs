@@ -14,7 +14,10 @@ var connectionString =
     ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
 
 builder.Services.AddDbContext<Cloud9Context>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString, o =>
+    {
+        o.EnableRetryOnFailure();
+    }));
 
 builder.Services.AddCors(options =>
 {
