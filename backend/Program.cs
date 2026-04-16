@@ -328,7 +328,20 @@ async (Cloud9Context db, int bookingId) =>
         return Results.Ok(availableTables);
 });
 
+Console.WriteLine("CONNECTION STRING: " + connectionString);
 
+app.MapGet("/test-db", async (Cloud9Context db) =>
+{
+    try
+    {
+        await db.Database.CanConnectAsync();
+        return Results.Ok("DB works");
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
 static async Task AutoCleanupBookings(Cloud9Context db)
 {
     var now = DateTime.UtcNow;
@@ -362,7 +375,5 @@ static async Task AutoCleanupBookings(Cloud9Context db)
     if (releaseBookings.Any() || deleteBookings.Any())
         await db.SaveChangesAsync();
 }
-
-
 
 app.Run();
