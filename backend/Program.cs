@@ -122,7 +122,6 @@ app.MapPost("/bookings", async (Cloud9Context db, Booking booking) =>
 
 app.MapGet("/bookings", async (Cloud9Context db) =>
 {
-    await AutoCleanupBookings(db);
     var bookings = await db.Bookings
     .Include(b => b.Table)
     .Select(b => new {
@@ -146,8 +145,6 @@ app.MapGet("/bookings", async (Cloud9Context db) =>
 });
 app.MapGet("/admin/bookings", async (Cloud9Context db) =>
 {
-    await AutoCleanupBookings(db);
-
     var bookings = await db.Bookings
         .Include(b => b.Table)
         .OrderBy(b => b.BookingTime)
@@ -221,6 +218,11 @@ app.MapPatch("/admin/bookings/{id}/unassign-table", async (Cloud9Context db, int
 
     return Results.Ok(booking);
 });
+app.MapPost("/admin/cleanup", async (Cloud9Context db) =>
+{
+    await AutoCleanupBookings(db);
+    return Results.Ok("Cleanup done");
+});
 
 app.MapGet("/categories", async (Cloud9Context db) =>
 {
@@ -265,8 +267,6 @@ app.MapGet("/menu-items", async (Cloud9Context db) =>
 
 app.MapGet("/admin/tables", async (Cloud9Context db) =>
 {
-    await AutoCleanupBookings(db);
-
     var now = DateTime.UtcNow;
     var windowStart = now.AddHours(-3);
     var windowEnd = now.AddHours(3);
