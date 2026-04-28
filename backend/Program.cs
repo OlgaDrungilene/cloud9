@@ -101,23 +101,30 @@ app.MapGet("/tables/available", async (Cloud9Context db) =>
 
 app.MapPost("/bookings", async (Cloud9Context db, Booking booking) =>
 {
-    booking.BookingTime = DateTime
-    .SpecifyKind(booking.BookingTime, DateTimeKind.Local)
-    .ToUniversalTime();
+    try
+    {
+        booking.BookingTime = DateTime
+            .SpecifyKind(booking.BookingTime, DateTimeKind.Local)
+            .ToUniversalTime();
 
-    if (string.IsNullOrWhiteSpace(booking.FullName))
-        return Results.BadRequest("Customer name is required.");
+        if (string.IsNullOrWhiteSpace(booking.FullName))
+            return Results.BadRequest("Customer name is required.");
 
-    if (booking.BookingTime < DateTime.UtcNow)
-        return Results.BadRequest("Booking time must be in the future.");
+        if (booking.BookingTime < DateTime.UtcNow)
+            return Results.BadRequest("Booking time must be in the future.");
 
-    // Initialt ingen assigned table
-    booking.TableId = null;
+        booking.TableId = null;
 
-    db.Bookings.Add(booking);
-    await db.SaveChangesAsync();
+        db.Bookings.Add(booking);
+        await db.SaveChangesAsync();
 
-    return Results.Created($"/bookings/{booking.Id}", booking)  ;
+        return Results.Created($"/bookings/{booking.Id}", booking);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("BOOKING ERROR: " + ex.ToString());
+        return Results.Problem(ex.Message);
+    }
 });
 
 app.MapGet("/bookings", async (Cloud9Context db) =>
