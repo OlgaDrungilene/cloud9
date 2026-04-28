@@ -376,4 +376,9 @@ static async Task AutoCleanupBookings(Cloud9Context db)
         await db.SaveChangesAsync();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<Cloud9Context>();
+    db.Database.EnsureCreated();
+}
 app.Run();
