@@ -10,8 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 //DbContext
 var connectionString =
-    builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+    Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<Cloud9Context>(options =>
     options.UseNpgsql(connectionString, o =>
