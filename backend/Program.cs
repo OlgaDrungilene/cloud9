@@ -9,9 +9,12 @@ Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "1");
 var builder = WebApplication.CreateBuilder(args);
 
 //DbContext
-var connectionString =
-    Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new Exception("Connection string NOT found in environment variables!");
+}
 
 builder.Services.AddDbContext<Cloud9Context>(options =>
     options.UseNpgsql(connectionString, o =>
