@@ -27,7 +27,8 @@ builder.Services.AddCors(options =>
             "https://cloud9-restaurant.netlify.app"
         )
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();;
     });
 });
 
