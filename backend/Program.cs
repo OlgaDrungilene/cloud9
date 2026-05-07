@@ -9,12 +9,8 @@ Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "1");
 var builder = WebApplication.CreateBuilder(args);
 
 //DbContext
-var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
-
-if (string.IsNullOrEmpty(connectionString))
-{
-    throw new Exception("Connection string NOT found in environment variables!");
-}
+var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<Cloud9Context>(options =>
     options.UseNpgsql(connectionString, o =>
@@ -96,7 +92,7 @@ app.MapGet("/tables/{id}", async (Cloud9Context db, int id) =>
 app.MapGet("/tables/available", async (Cloud9Context db) =>
 {
     var availableTables = await db.Tables
-        .Where(t => t.IsAvailable== true)
+        .Where(t => t.IsAvailable)
         .ToListAsync();
 
     return Results.Ok(availableTables);
@@ -338,7 +334,9 @@ async (Cloud9Context db, int bookingId) =>
         return Results.Ok(availableTables);
 });
 
-Console.WriteLine("CONNECTION STRING: " + connectionString);
+Console.WriteLine(connectionString?.Contains("Host=") == true
+    ? "Connection string loaded"
+    : "Connection string missing");
 
 app.MapGet("/test-db", async (Cloud9Context db) =>
 {
