@@ -11,6 +11,7 @@ public class Cloud9Context : DbContext
     public DbSet<MenuItem> MenuItems => Set<MenuItem>();
     public DbSet<Table> Tables => Set<Table>();
     public DbSet<Booking> Bookings => Set<Booking>();
+    public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

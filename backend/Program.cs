@@ -1,12 +1,21 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using backend.Data;
 using backend.Models;
+using backend.DTOs;
 
 Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "1");
 
 
 var builder = WebApplication.CreateBuilder(args);
+var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
 
 //DbContext
 var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
@@ -32,6 +41,30 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtKey!)
+        )
+    };
+});
+
+builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -47,34 +80,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapGet("/", () => "Hello World!");
-
-// app.MapGet("/menu", async (Cloud9Context db) =>
-// {
-//     var items = await db.MenuItems
-//         .Include(m => m.Category)
-//         .ToListAsync();
-
-//     return Results.Ok(items);
-// });
-
-// app.MapGet("/menu/{id}", async (Cloud9Context db, int id) =>
-// {
-//     var item = await db.MenuItems
-//         .Include(m => m.Category)
-//         .FirstOrDefaultAsync(m => m.Id == id);
-
-//     return item is null ? Results.NotFound() : Results.Ok(item);
-// });
-
-// app.MapGet("/menu/specials", async (Cloud9Context db) =>
-// {
-//     var specials = await db.MenuItems
-//         .Where(m => m.IsSpecial)
-//         .ToListAsync();
-
-//     return Results.Ok(specials);
-// });
 
 app.MapGet("/tables", async (Cloud9Context db) =>
 {
@@ -172,7 +181,9 @@ app.MapGet("/admin/bookings", async (Cloud9Context db) =>
         .ToListAsync();
 
     return Results.Ok(bookings);
-});
+})
+.RequireAuthorization(policy =>
+    policy.RequireRole("Admin"));
 
 app.MapPatch("/admin/bookings/{id}/assign-table", 
 async (Cloud9Context db, int id, int tableId) =>
@@ -385,9 +396,76 @@ static async Task AutoCleanupBookings(Cloud9Context db)
         await db.SaveChangesAsync();
 }
 
-using (var scope = app.Services.CreateScope())
+app.MapPost("/register", async (Cloud9Context db, UserRegisterDto dto) =>
 {
-    var db = scope.ServiceProvider.GetRequiredService<Cloud9Context>();
-    db.Database.EnsureCreated();
-}
+    if (await db.Users.AnyAsync(u => u.Email == dto.Email))
+        return Results.BadRequest("Email already exists");
+
+    var hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+
+    var user = new User
+    {
+        FullName = dto.FullName,
+        Email = dto.Email,
+        PasswordHash = hashedPassword,
+        Role = "User"
+    };
+
+    db.Users.Add(user);
+    await db.SaveChangesAsync();
+
+    return Results.Ok("User created");
+});
+
+app.MapPost("/login", async (
+    Cloud9Context db,
+    LoginDto dto) =>
+{
+    var user = await db.Users
+        .FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+    if (user == null)
+        return Results.BadRequest("Invalid email or password");
+
+    bool isPasswordValid = BCrypt.Net.BCrypt
+        .Verify(dto.Password, user.PasswordHash);
+
+    if (!isPasswordValid)
+        return Results.BadRequest("Invalid email or password");
+
+    var claims = new[]
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.Role, user.Role)
+    };
+
+    var key = new SymmetricSecurityKey(
+        Encoding.UTF8.GetBytes(
+            builder.Configuration["Jwt:Key"]!
+        ));
+
+    var creds = new SigningCredentials(
+        key,
+        SecurityAlgorithms.HmacSha256
+    );
+
+    var token = new JwtSecurityToken(
+        issuer: builder.Configuration["Jwt:Issuer"],
+        audience: builder.Configuration["Jwt:Audience"],
+        claims: claims,
+        expires: DateTime.UtcNow.AddDays(7),
+        signingCredentials: creds
+    );
+
+    var jwt = new JwtSecurityTokenHandler()
+        .WriteToken(token);
+
+    return Results.Ok(new
+    {
+        token = jwt,
+        role = user.Role,
+        fullName = user.FullName
+    });
+});
 app.Run();
