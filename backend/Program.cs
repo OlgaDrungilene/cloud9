@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using backend.Data;
 using backend.Models;
 using backend.DTOs;
+using Microsoft.OpenApi.Models;
 
 Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "1");
 
@@ -64,9 +65,46 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+});
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Cloud9 API",
+        Version = "v1"
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter JWT token"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -159,6 +197,11 @@ app.MapGet("/bookings", async (Cloud9Context db) =>
 
     return Results.Ok(bookings);
 });
+app.MapGet("/admin", () =>
+{
+    return Results.Ok("Welcome Admin!");
+})
+.RequireAuthorization("AdminOnly");
 app.MapGet("/admin/bookings", async (Cloud9Context db) =>
 {
     var bookings = await db.Bookings
@@ -468,4 +511,17 @@ app.MapPost("/login", async (
         fullName = user.FullName
     });
 });
+
+app.MapGet("/me", (ClaimsPrincipal user) =>
+{
+    var email = user.FindFirst(ClaimTypes.Email)?.Value;
+    var role = user.FindFirst(ClaimTypes.Role)?.Value;
+
+    return Results.Ok(new
+    {
+        Email = email,
+        Role = role
+    });
+}).RequireAuthorization();
+
 app.Run();
