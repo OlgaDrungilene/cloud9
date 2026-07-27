@@ -301,6 +301,101 @@ app.MapGet("/categories/{id}/items", async (Cloud9Context db, int id) =>
     return Results.Ok(items);
 });
 
+app.MapPost("/categories", async (Cloud9Context db, CreateCategoryDto dto) =>
+{
+    var existingCategory = await db.Categories
+    .AnyAsync(c => c.Name.ToLower() == dto.Name.ToLower());
+
+if (existingCategory)
+{
+    return Results.BadRequest("Category already exists.");
+}
+    
+    var category = new Category
+    {
+        Name = dto.Name
+    };
+
+    db.Categories.Add(category);
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/categories/{category.Id}", category);
+
+}).RequireAuthorization("AdminOnly");
+
+app.MapPut("/categories/{id}", async (Cloud9Context db, int id, CreateCategoryDto dto) =>
+{
+    var category = await db.Categories.FindAsync(id);
+    if (category is null)
+    {
+        return Results.NotFound($"Category {id} not found.");
+    }
+
+    var existingCategory = await db.Categories.AnyAsync(c => 
+        c.Id != id && 
+        c.Name.ToLower() == dto.Name.ToLower());
+
+    if (existingCategory)
+    {
+        return Results.BadRequest("Category already exists.");
+    }
+
+    category.Name = dto.Name;
+
+    await db.SaveChangesAsync();
+
+    return Results.Ok(category);
+
+}).RequireAuthorization("AdminOnly");
+
+app.MapDelete("/categories/{id}", async (Cloud9Context db, int id) =>
+{
+    var category = await db.Categories.FindAsync(id);
+    if (category is null)
+    {
+        return Results.NotFound($"Category {id} not found.");
+    }
+
+    var hasMenuItems = await db.MenuItems.AnyAsync(m => m.CategoryId == id);
+    if (hasMenuItems)
+    {
+        return Results.Conflict("Cannot delete category with associated menu items.");
+    }
+
+    db.Categories.Remove(category);
+    await db.SaveChangesAsync();
+
+    return Results.NoContent();
+
+}).RequireAuthorization("AdminOnly");
+
+
+app.MapPost("/menu-items", async (Cloud9Context db, CreateMenuItemDto dto) =>
+{
+    var category = await db.Categories.FindAsync(dto.CategoryId);
+
+if (category is null)
+{
+    return Results.BadRequest("Category not found.");
+}
+    var menuItem = new MenuItem
+    {
+        Name = dto.Name,
+        Price = dto.Price,
+        Description = dto.Description,
+        Tags = dto.Tags,
+        CategoryId = dto.CategoryId,
+        IsSpecial = dto.IsSpecial,
+        ImageUrl = dto.ImageUrl
+    };
+
+    db.MenuItems.Add(menuItem);
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/menu-items/{menuItem.Id}", menuItem);
+
+}).RequireAuthorization("AdminOnly");
+
 app.MapGet("/menu-items", async (Cloud9Context db) =>
 {
     var items = await db.MenuItems
@@ -325,6 +420,45 @@ app.MapGet("/menu-items", async (Cloud9Context db) =>
 
     return Results.Ok(items);
 });
+
+
+app.MapPut("/menu-items/{id}", async (Cloud9Context db, int id, CreateMenuItemDto dto) =>
+{
+    var menuItem = await db.MenuItems.FindAsync(id);
+    if (menuItem is null)
+        return Results.NotFound($"Menu item {id} not found.");
+
+    var category = await db.Categories.FindAsync(dto.CategoryId);
+    if (category is null)
+        return Results.BadRequest("Category not found.");
+
+    menuItem.Name = dto.Name;
+    menuItem.Price = dto.Price;
+    menuItem.Description = dto.Description;
+    menuItem.Tags = dto.Tags;
+    menuItem.CategoryId = dto.CategoryId;
+    menuItem.IsSpecial = dto.IsSpecial;
+    menuItem.ImageUrl = dto.ImageUrl;
+
+    await db.SaveChangesAsync();
+
+    return Results.Ok(menuItem);
+
+}).RequireAuthorization("AdminOnly");
+
+
+app.MapDelete("/menu-items/{id}", async (Cloud9Context db, int id) =>
+{
+    var menuItem = await db.MenuItems.FindAsync(id);
+    if (menuItem is null)
+        return Results.NotFound($"Menu item {id} not found.");
+
+    db.MenuItems.Remove(menuItem);
+    await db.SaveChangesAsync();
+
+    return Results.NoContent();
+}).RequireAuthorization("AdminOnly");
+
 
 app.MapGet("/admin/tables", async (Cloud9Context db) =>
 {
