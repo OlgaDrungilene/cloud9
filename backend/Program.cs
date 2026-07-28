@@ -190,7 +190,7 @@ app.MapGet("/bookings", async (Cloud9Context db) =>
                 b.Table.Id,
                 b.Table.Capacity,
                 b.Table.IsAvailable,
-                b.Table.isActive
+                b.Table.IsActive
             }
         })
     .ToListAsync();
@@ -459,6 +459,117 @@ app.MapDelete("/menu-items/{id}", async (Cloud9Context db, int id) =>
     return Results.NoContent();
 }).RequireAuthorization("AdminOnly");
 
+app.MapPost("/orders", async (Cloud9Context db, CreateOrderDto dto) =>
+{
+    var order = new Order
+    {
+        FullName = dto.FullName,
+        OrderItems = new List<OrderItem>()
+    };
+
+    foreach (var itemDto in dto.OrderItems)
+    {
+        var menuItem = await db.MenuItems.FindAsync(itemDto.MenuItemId);
+        if (menuItem is null)
+            return Results.BadRequest($"Menu item with ID {itemDto.MenuItemId} not found.");
+
+        var orderItem = new OrderItem
+        {
+            MenuItemId = menuItem.Id,
+            Quantity = itemDto.Quantity,
+            UnitPrice = menuItem.Price
+        };
+
+        order.TotalAmount += orderItem.UnitPrice * orderItem.Quantity;
+        order.OrderItems.Add(orderItem);
+    }
+
+    db.Orders.Add(order);
+    await db.SaveChangesAsync();
+
+    var response = new OrderResponseDto
+{
+    Id = order.Id,
+    FullName = order.FullName,
+    CreatedAt = order.CreatedAt,
+    Status = order.Status.ToString(),
+    TotalAmount = order.TotalAmount
+};
+
+return Results.Created($"/orders/{order.Id}", response);
+});
+
+app.MapGet("/orders", async (Cloud9Context db) =>
+{
+    var orders = await db.Orders
+        .AsNoTracking()
+        .Select(o => new OrderResponseDto
+        {
+            Id = o.Id,
+            FullName = o.FullName,
+            CreatedAt = o.CreatedAt,
+            Status = o.Status.ToString(),
+            TotalAmount = o.TotalAmount
+        })
+        .ToListAsync();
+
+    return Results.Ok(orders);
+});
+
+app.MapGet("/orders/{id}", async (Cloud9Context db, int id) =>
+{
+    var order = await db.Orders
+        .AsNoTracking()
+        .FirstOrDefaultAsync(o => o.Id == id);
+
+    if (order is null)
+        return Results.NotFound($"Order {id} not found.");
+
+    var response = new OrderResponseDto
+    {
+        Id = order.Id,
+        FullName = order.FullName,
+        CreatedAt = order.CreatedAt,
+        Status = order.Status.ToString(),
+        TotalAmount = order.TotalAmount
+    };
+
+    return Results.Ok(response);
+});
+
+app.MapPatch("/orders/{id}/status", async (Cloud9Context db, int id, UpdateOrderStatusDto dto) =>
+{
+    var order = await db.Orders.FindAsync(id);
+    if (order is null)
+        return Results.NotFound($"Order {id} not found.");
+
+    if (!Enum.TryParse<OrderStatus>(dto.Status, true, out var parsedStatus))
+        return Results.BadRequest("Invalid status value.");
+
+    order.Status = parsedStatus;
+    await db.SaveChangesAsync();
+
+    return Results.Ok(new OrderResponseDto
+{
+    Id = order.Id,
+    FullName = order.FullName,
+    CreatedAt = order.CreatedAt,
+    Status = order.Status.ToString(),
+    TotalAmount = order.TotalAmount
+});
+});
+
+app.MapDelete("/orders/{id}", async (Cloud9Context db, int id) =>
+{
+    var order = await db.Orders.FindAsync(id);
+    if (order is null)
+        return Results.NotFound($"Order {id} not found.");
+
+    db.Orders.Remove(order);
+    await db.SaveChangesAsync();
+
+    return Results.NoContent();
+});
 
 app.MapGet("/admin/tables", async (Cloud9Context db) =>
 {

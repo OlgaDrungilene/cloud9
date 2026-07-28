@@ -7,7 +7,7 @@ public class Table
     public int Capacity { get; set; }
     public bool IsAvailable { get; set; }
 
-    public bool isActive { get; set; }= true;
+    public bool IsActive { get; set; }= true;
 
     [JsonIgnore]
     public ICollection<Booking>? Bookings { get; set; }
